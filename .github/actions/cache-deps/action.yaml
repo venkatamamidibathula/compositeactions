@@ -3,7 +3,8 @@ description: 'Get the dependencies and cache them'
 inputs:
   caching:
     description: Whether to cache them or not
-    required: true
+    required: false 
+    default: 'true'
 runs:
   using: 'composite'
   steps:
@@ -19,5 +20,5 @@ runs:
           **/node_modules
         key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
     - name: Install dependencies
-      if: ${{ inputs.caching == 'true' && steps.cache.outputs.cache-hit != 'true' }}
+      if: ${{ inputs.caching == 'true' || inputs.caching != 'true' && steps.cache.outputs.cache-hit != 'true' }}
       run: npm ci
